@@ -10,6 +10,8 @@ const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cartItem');
+const Order = require('./models/order');
+const OrderItem = require('./models/orderItem');
 
 const app = express();
 
@@ -43,9 +45,13 @@ Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, {through: OrderItem});
+
 sequelize
-    // .sync()
-    .sync({force: true}) // force commented because we don't want to override our table each time
+    .sync()
+    // .sync({force: true}) // force commented because we don't want to override our table each time
     .then(response => {
     // console.log(response);
     return User.findByPk(1);
@@ -59,6 +65,9 @@ sequelize
         }
 
         return Promise.resolve(user); // Also possible just return user without promise, it's just to clarify;
+    })
+    .then(user => {
+        user.createCart();
     })
     .then(user => {
         // console.log(user);
