@@ -40,8 +40,8 @@ User.hasMany(Product); // Just to show another direction of relations between Pr
 User.hasOne(Cart);
 Cart.belongsTo(User);
 
-Cart.belongsToMany(Product, { trough: CartItem });
-Product.belongsToMany(Cart, { trough: CartItem });
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
     // .sync()
